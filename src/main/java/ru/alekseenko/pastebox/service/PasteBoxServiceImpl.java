@@ -29,6 +29,7 @@ public class PasteBoxServiceImpl implements PasteBoxService{
 
     @Override
     public PasteBoxResponse getByHash(String hash) {
+
         PasteBoxEntity pasteBoxEntity = repository.getByHash(hash);
         return new PasteBoxResponse(pasteBoxEntity.getData(), pasteBoxEntity.isPublic());
     }
@@ -50,7 +51,7 @@ public class PasteBoxServiceImpl implements PasteBoxService{
         entity.setId(hash);
         entity.setHash(Integer.toHexString(hash));
         entity.setPublic(request.getPublicStatus() == PublicStatus.PUBLIC);
-        entity.setLifeTime(LocalDateTime.now().plusSeconds(request.getExpirationTimeSeconds()/1000));
+        entity.setLifeTime(LocalDateTime.now().plusSeconds(request.getExpirationTimeSeconds()));
         repository.add(entity);
 
         return new PasteBoxURLResponse(host + "/" + entity.getHash());

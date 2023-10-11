@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Repository
 public class PasteBoxRepositoryImpl implements PasteBoxRepository{
@@ -28,11 +29,13 @@ public class PasteBoxRepositoryImpl implements PasteBoxRepository{
     @Override
     public List<PasteBoxEntity> getListOfPublicAndAlive(int amount) {
         LocalDateTime now = LocalDateTime.now();
+
         return vault.values().stream()
                 .filter(PasteBoxEntity::isPublic)
-                .filter(entity -> entity.getLifeTime().isAfter(now))
+                .filter(pasteBoxEntity -> pasteBoxEntity.getLifeTime().isAfter(now))
                 .sorted(Comparator.comparing(PasteBoxEntity::getId).reversed())
-                .limit(amount).toList();
+                .limit(amount)
+                .collect(Collectors.toList());
     }
 
     @Override
